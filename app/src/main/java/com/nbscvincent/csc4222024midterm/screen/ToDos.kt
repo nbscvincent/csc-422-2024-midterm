@@ -1,5 +1,4 @@
 package com.nbscvincent.csc4222024midterm.screen
-
 import android.annotation.SuppressLint
 import android.app.Application
 import androidx.compose.foundation.Image
@@ -69,7 +68,7 @@ import java.util.Calendar
 @SuppressLint("CoroutineCreationDuringComposition", "UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
 @Composable
-fun HomePage(
+fun ToDos(
     navController: NavController,
 //    drawerState: DrawerState,
     screenViewModel: ScreenViewModel
@@ -85,26 +84,13 @@ fun HomePage(
     val workManager = WorkManager.getInstance(application)
 
 
-
-    var greeting by remember { mutableStateOf("") }
-    var qoutes by remember { mutableStateOf("") }
-    coroutineScope.launch {
-        greeting = greeting()
-        qoutes = viewModel.getQuote()
-    }
-
-
-
-
-
-
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Button(
                         onClick = {
-                            navController.navigate(MainScreen.Profile.name)
+                            navController.navigate(MainScreen.HomePage.name)
                         }
                     ) {
                         Text("Profile")
@@ -149,47 +135,21 @@ fun HomePage(
         ) {
             Spacer(modifier = Modifier.height(50.dp))
 
-            Text(
-                text = greeting,
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                color = Color.Black,
-            )
-            Spacer(modifier = Modifier.height(50.dp))
-            Text(
-                text = qoutes,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 15.sp,
-                color = Color.Black,
-            )
-
-
-        }
-
-
-
-
-
-
 
 
 
         }
+
+
+
+
+
+
+
+
+
     }
-
-suspend fun greeting(): String {
-    var msg = ""
-
-    val calendarTime = Calendar.getInstance()
-
-    val time = calendarTime.get(Calendar.HOUR_OF_DAY)
-    when(time){
-        in 6..11 -> msg = "Good Morning"
-        in 12..17 -> msg = "Good Afternoon"
-        in 18..22 -> msg = "Good Evening"
-        else -> msg = "Good Morning"
-    }
-    return msg
 }
+
 
 

@@ -12,13 +12,13 @@ interface AppContainer {
 
 
 
-
     class AppDataContainer(private val context: Context) : AppContainer {
 
 
         override val onlineUserRepository: OnlineUserRepository by lazy {
             OnlineUserRepository()
         }
+
 
 
 

@@ -18,6 +18,7 @@ import com.nbscvincent.csc4222024midterm.data.network.KtorClient
 import com.nbscvincent.csc4222024midterm.data.onlineRepository.OnlineUserRepository
 import com.nbscvincent.csc4222024midterm.model.Credentials
 import com.nbscvincent.csc4222024midterm.model.LoginResponse
+import com.nbscvincent.csc4222024midterm.model.ResponseQoutes
 import com.nbscvincent.csc4222024midterm.navigation.routes.MainScreen
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -45,5 +46,31 @@ class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepositor
             navController.navigate(MainScreen.HomePage.name)
         }
     }
+    private val ktorClient: HttpClient = KtorClient()
+    suspend fun getQuote() : String {
+        var quote: String = ""
+        try {
+            val req = ktorClient.request(
+                HttpRoutes.quotes
+            ){
+                method = HttpMethod.Get
+                url(HttpRoutes.quotes)
+                contentType(ContentType.Application.Json)
+                accept(ContentType.Application.Json)
+            }
+
+
+            if (req.status.toString() == "200 OK"){
+                val response = req.body<ResponseQoutes>()
+                quote = response.quote
+            }
+
+        } catch (e: Exception){
+            println("SAMPLE ERROR $e")
+            //data.add(LoginReturn(1,"Invalid credentials"))
+        }
+        return quote
+    }
+
 }
 

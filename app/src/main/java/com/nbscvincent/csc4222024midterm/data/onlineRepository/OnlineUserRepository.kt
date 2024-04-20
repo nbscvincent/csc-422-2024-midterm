@@ -6,6 +6,7 @@ import com.nbscvincent.csc4222024midterm.data.network.HttpRoutes
 import com.nbscvincent.csc4222024midterm.data.network.KtorClient
 import com.nbscvincent.csc4222024midterm.model.Credentials
 import com.nbscvincent.csc4222024midterm.model.LoginResponse
+import com.nbscvincent.csc4222024midterm.model.ResponseQoutes
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.accept
@@ -14,6 +15,7 @@ import io.ktor.client.request.forms.formData
 import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
@@ -49,6 +51,31 @@ class OnlineUserRepository(private val ktorClient: HttpClient = KtorClient()) {
             }
             return data
         }
+
+    suspend fun getQoutes() : String {
+        var quote: String = ""
+        try {
+            val req = ktorClient.request(
+                HttpRoutes.quotes
+            ){
+                method = HttpMethod.Get
+                url(HttpRoutes.quotes)
+                contentType(ContentType.Application.Json)
+                accept(ContentType.Application.Json)
+            }
+
+
+            if (req.status.toString() == "200 OK"){
+                val response = req.body<ResponseQoutes>()
+                quote = response.quote
+            }
+
+        } catch (e: Exception){
+            println("SAMPLE ERROR $e")
+            //data.add(LoginReturn(1,"Invalid credentials"))
+        }
+        return quote
+    }
 }
 
 
