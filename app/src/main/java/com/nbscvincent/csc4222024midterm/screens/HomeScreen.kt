@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.nbscvincent.csc4222024midterm.model.AppScreenViewModel
 import com.nbscvincent.csc4222024midterm.model.ScreenViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -79,7 +80,7 @@ fun HomeScreen (
             Button(
                 onClick = {
                     coroutineScope.launch {
-
+                        navController.navigate(MainNav.Todos.name)
                     }
                 },
                 modifier = Modifier
@@ -101,7 +102,7 @@ fun HomeScreen (
             Button(
                 onClick = {
                     coroutineScope.launch {
-
+                        navController.navigate(MainNav.Recipes.name)
                     }
                 },
                 modifier = Modifier

@@ -55,12 +55,6 @@ fun MainLogin(
             composable(route = MainNav.HomePage.name) {
                 HomeScreen(navController, screenViewModel)
             }
-            composable(route = MainNav.Recipes.name) {
-                Recipes(navController, screenViewModel)
-            }
-            composable(route = MainNav.HomePage.name) {
-                Todos(navController, screenViewModel)
-            }
         }
     }
 }
@@ -84,6 +78,12 @@ fun MainHomeScreen(
             }
             composable(route = MainNav.HomePage.name) {
                 HomeScreen(navController, screenViewModel)
+            }
+            composable(route = MainNav.Recipes.name) {
+                Recipes(navController, screenViewModel)
+            }
+            composable(route = MainNav.Todos.name) {
+                Todos(navController, screenViewModel)
             }
         }
     }

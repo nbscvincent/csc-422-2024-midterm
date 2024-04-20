@@ -100,13 +100,37 @@ class AppScreenViewModel() : ViewModel() {
             println("SAMPLE" + req.status)
             println("SAMPLE" + req.bodyAsText())
 
-            //if (req.status.toString() == "200 OK"){
-                //val response = req.body<ResponseQoutes>()
+            if (req.status.toString() == "200 OK"){
+                val response = req.body<ResponseQoutes>()
+                quote = response.quote
+            }
 
-                /*quote[0].id = response.id
-                quote[0].quote = response.quote
-                quote[0].author = response.author*/
-            //}
+        } catch (e: Exception){
+            println("SAMPLE ERROR $e")
+            //data.add(LoginReturn(1,"Invalid credentials"))
+        }
+        return quote
+    }
+
+    suspend fun getTodos() : String {
+        var quote: String = ""
+        try {
+            val req = ktorClient.request(
+                HttpRoutes.quotes
+            ){
+                method = HttpMethod.Get
+                url(HttpRoutes.quotes)
+                contentType(ContentType.Application.Json)
+                accept(ContentType.Application.Json)
+            }
+
+            println("SAMPLE" + req.status)
+            println("SAMPLE" + req.bodyAsText())
+
+            if (req.status.toString() == "200 OK"){
+                //val response = req.body<ResponseQoutes>()
+                //quote = response.quote
+            }
 
         } catch (e: Exception){
             println("SAMPLE ERROR $e")
