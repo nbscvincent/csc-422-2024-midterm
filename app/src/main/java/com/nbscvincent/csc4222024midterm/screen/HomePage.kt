@@ -23,6 +23,7 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.BottomAppBarDefaults.containerColor
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -117,13 +118,7 @@ fun HomePage(
         topBar = {
             TopAppBar(
                 title = {
-                    Button(
-                        onClick = {
-                            navController.navigate(MainScreen.Profile.name)
-                        }
-                    ) {
-                        Text("Profile")
-                    }
+
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Gray),
                 actions = {
@@ -185,8 +180,24 @@ fun HomePage(
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
 
+
+            Button(
+                onClick = {
+
+                        navController.navigate(MainScreen.ToDos.name)
+
+                },
+
+            ) {
+                Text(
+                    text = "Todos",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.White,
+                )
             }
 
+            }
 
         }
     }

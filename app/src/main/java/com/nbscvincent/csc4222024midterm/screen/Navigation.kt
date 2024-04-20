@@ -95,6 +95,9 @@ fun MainLogin(
             composable(route = MainScreen.Splash.name) {
                 SplashScreen( navController, screenViewModel )
             }
+            composable(route = MainScreen.ToDos.name) {
+                ToDos(navController, screenViewModel)
+            }
         }
     }
 }
@@ -130,9 +133,7 @@ fun MainHomeScreen(
             composable(route = MainScreen.HomePage.name) {
                 HomePage(navController, screenViewModel)
             }
-            composable(route = MainScreen.Profile.name) {
-                ToDos(navController, screenViewModel)
-            }
+
             composable(route = MainScreen.CheckLogin.name) {
                 CheckLogin(screenViewModel)
             }

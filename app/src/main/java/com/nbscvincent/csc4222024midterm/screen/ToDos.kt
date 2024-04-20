@@ -65,17 +65,13 @@ import com.nbscvincent.csc4222024midterm.viewmodel.ScreenViewModel
 import kotlinx.coroutines.coroutineScope
 import java.util.Calendar
 
-@SuppressLint("CoroutineCreationDuringComposition", "UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoilApi::class)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToDos(
     navController: NavController,
     screenViewModel: ScreenViewModel
 ) {
-
-    val context = LocalContext.current
-    val preferencesManager = remember { PreferencesManager(context) }
-
 
 
     Scaffold(
@@ -87,7 +83,7 @@ fun ToDos(
                             navController.navigate(MainScreen.HomePage.name)
                         }
                     ) {
-                        Text("Profile")
+                        Text("Back")
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Gray),
