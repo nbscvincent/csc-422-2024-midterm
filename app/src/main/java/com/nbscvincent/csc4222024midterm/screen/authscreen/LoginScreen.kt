@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,9 +28,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,14 +50,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.nbscvincent.csc4222024midterm.R
 import com.nbscvincent.csc4222024midterm.data.AppViewModelProvider
-import com.nbscvincent.csc4222024midterm.model.UserProfile
 import com.nbscvincent.csc4222024midterm.navigation.routes.MainScreen
 import com.nbscvincent.csc4222024midterm.preferences.PreferencesManager
 import com.nbscvincent.csc4222024midterm.screen.loginAlert
 import com.nbscvincent.csc4222024midterm.viewmodel.LoginScreenViewModel
 import com.nbscvincent.csc4222024midterm.viewmodel.ScreenViewModel
-import com.nbscvincent.csc4222024midterm.viewmodel.UserDetails
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,6 +79,8 @@ fun LoginScreen(
 
     val scrollState = rememberScrollState()
 
+    val loginResult by viewModel.loginResult.collectAsState()
+
 
 
     Scaffold(
@@ -104,34 +101,19 @@ fun LoginScreen(
                     Button(
                         onClick = {
                             coroutineScope.launch {
-                                val loginState = viewModel.userUiState
-                                loginState.userDetails = UserDetails(username, password)
-                                val flow : Flow<UserProfile?>? = viewModel.selectUser()
 
-                                if (flow != null) {
-                                    flow.collect {
+                                if (loginResult.isSuccess) {
+                                    val userProfile = loginResult.getOrNull()
+                                    if (userProfile != null) {
+                                        // Save login state and username to preferences
+                                        preferencesManager.saveData("login", "true")
+                                        preferencesManager.saveData("username", userProfile.username)
 
-                                        if (it != null) {
-                                            if (it.username.isEmpty()){
-                                                openDialog.value = true
-                                            }else {
-
-
-                                                screenViewModel.setLogin()
-
-                                                preferencesManager.saveData("login", "true")
-                                                preferencesManager.saveData("username", it.username)
-
-
-                                                navController.navigate(MainScreen.Splash.name)
-                                            }
-                                        }else{
-                                            openDialog.value = true
-                                        }
+                                        // Navigate to home page
+                                        navController.navigate(MainScreen.Splash.name)
+                                    } else {
+                                        openDialog.value = true
                                     }
-                                }else{
-                                    // no record found
-                                    openDialog.value = true
                                 }
                             }
                         },
