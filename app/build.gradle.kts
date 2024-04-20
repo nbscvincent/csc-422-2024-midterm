@@ -110,4 +110,8 @@ dependencies {
 
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("com.google.dagger:dagger-android-support:2.45")
+
+
+    // photo from API
+    implementation("io.coil-kt:coil-compose:1.3.2")
 }

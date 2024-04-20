@@ -20,12 +20,4 @@ interface UserProfileDao {
     @Query("SELECT * FROM user WHERE username = :username AND password = :password")
     fun getUsersPass(username: String, password: String): Flow<UserProfile>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(user: UserProfile)
-
-    @Update
-    suspend fun update(user: UserProfile)
-
-    @Delete
-    suspend fun delete(user: UserProfile)
 }

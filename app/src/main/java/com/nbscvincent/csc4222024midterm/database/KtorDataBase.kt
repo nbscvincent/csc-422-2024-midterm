@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.nbscvincent.csc4222024midterm.data.dao.UserProfileDao
 import com.nbscvincent.csc4222024midterm.model.UserProfile
+
 @Database(entities = [UserProfile::class,], version = 1, exportSchema = true)
 abstract class KtorDatabase : RoomDatabase() {
     abstract fun UserProfileDao(): UserProfileDao

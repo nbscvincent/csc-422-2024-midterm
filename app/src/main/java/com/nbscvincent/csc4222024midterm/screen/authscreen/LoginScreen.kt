@@ -50,18 +50,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.ktorapp.R
-import com.example.ktorapp.data.AppViewModelProvider
-import com.example.ktorapp.model.UserProfile
-import com.example.ktorapp.navigation.routes.MainScreen
-import com.example.ktorapp.preferences.PreferencesManager
-import com.example.ktorapp.screens.loginAlert
-import com.example.ktorapp.viewmodel.LoginScreenViewModel
-import com.example.ktorapp.viewmodel.ScreenViewModel
-import com.example.ktorapp.viewmodel.UserDetails
+import com.nbscvincent.csc4222024midterm.R
 import com.nbscvincent.csc4222024midterm.data.AppViewModelProvider
+import com.nbscvincent.csc4222024midterm.model.UserProfile
+import com.nbscvincent.csc4222024midterm.navigation.routes.MainScreen
+import com.nbscvincent.csc4222024midterm.preferences.PreferencesManager
+import com.nbscvincent.csc4222024midterm.screen.loginAlert
 import com.nbscvincent.csc4222024midterm.viewmodel.LoginScreenViewModel
 import com.nbscvincent.csc4222024midterm.viewmodel.ScreenViewModel
+import com.nbscvincent.csc4222024midterm.viewmodel.UserDetails
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -72,7 +69,7 @@ fun LoginScreen(
     screenViewModel: ScreenViewModel,
     viewModel: LoginScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    var email by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val isChecked = remember { mutableStateOf(false) }
     var passwordShow: Boolean by remember { mutableStateOf(false) }
@@ -86,6 +83,7 @@ fun LoginScreen(
     val preferencesManager = remember { PreferencesManager(context) }
 
     val scrollState = rememberScrollState()
+
 
 
     Scaffold(
@@ -107,7 +105,7 @@ fun LoginScreen(
                         onClick = {
                             coroutineScope.launch {
                                 val loginState = viewModel.userUiState
-                                loginState.userDetails = UserDetails(email, password)
+                                loginState.userDetails = UserDetails(username, password)
                                 val flow : Flow<UserProfile?>? = viewModel.selectUser()
 
                                 if (flow != null) {
@@ -117,15 +115,13 @@ fun LoginScreen(
                                             if (it.username.isEmpty()){
                                                 openDialog.value = true
                                             }else {
+
+
                                                 screenViewModel.setLogin()
 
                                                 preferencesManager.saveData("login", "true")
                                                 preferencesManager.saveData("username", it.username)
-                                                preferencesManager.saveData(
-                                                    "firstName",
-                                                    it.firstName
-                                                )
-                                                preferencesManager.saveData("lastName", it.lastName)
+
 
                                                 navController.navigate(MainScreen.Splash.name)
                                             }
@@ -156,29 +152,29 @@ fun LoginScreen(
                             color = Color.White,
                         )
                     }
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Don't have account? ",
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 15.sp,
-                            color = Color.Black,
-                        )
-                        TextButton(
-                            onClick = { navController.navigate(MainScreen.RegistrationScreen.name) })
-                        {
-                            Text(
-                                text = "Sign Up",
-                                fontWeight = FontWeight.ExtraBold,
-                                fontSize = 17.sp,
-                                color = Color.Red,
-                            )
-                        }
-                    }
+//                    Row(
+//                        modifier = Modifier
+//                            .fillMaxWidth(),
+//                        horizontalArrangement = Arrangement.Center,
+//                        verticalAlignment = Alignment.CenterVertically
+//                    ) {
+//                        Text(
+//                            text = "Don't have account? ",
+//                            fontWeight = FontWeight.Normal,
+//                            fontSize = 15.sp,
+//                            color = Color.Black,
+//                        )
+//                        TextButton(
+//                            onClick = { navController.navigate(MainScreen.RegistrationScreen.name) })
+//                        {
+//                            Text(
+//                                text = "Sign Up",
+//                                fontWeight = FontWeight.ExtraBold,
+//                                fontSize = 17.sp,
+//                                color = Color.Red,
+//                            )
+//                        }
+//                    }
                 }
             }
         }
@@ -194,7 +190,7 @@ fun LoginScreen(
         ) {
             Spacer(modifier = Modifier.height(30.dp))
             Image(
-                painter = painterResource(id = R.drawable.fitness_logo),
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
                 contentDescription = "Fitness Logo",
                 modifier = Modifier.size(250.dp)
             )
@@ -215,13 +211,13 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 25.dp, end = 25.dp),
-                value = email,
+                value = username,
                 shape = RoundedCornerShape(10.dp),
-                onValueChange = { email = it },
+                onValueChange = { username = it },
                 label = { Text(text = "Username", color = Color.Black) },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    textColor = Color.Black
-                ),
+//                colors = TextFieldDefaults.outlinedTextFieldColors(
+//                    textColor = Color.Black
+//                ),
                 trailingIcon = {
                     Icon(imageVector = Icons.Default.Email, contentDescription = "Email" , tint = Color.Red)
                 },
@@ -237,13 +233,13 @@ fun LoginScreen(
                 onValueChange = { password = it },
                 label = { Text(text = "Password", color = Color.Black) },
 
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    textColor = Color.Black,
-
-                    unfocusedBorderColor = Color.Gray, // Change to desired color when not focused
-
-
-                ),
+//                colors = TextFieldDefaults.outlinedTextFieldColors(
+//                    textColor = Color.Black,
+//
+//                    unfocusedBorderColor = Color.Gray, // Change to desired color when not focused
+//
+//
+//                ),
                 trailingIcon = {
                     val image = if (passwordShow)
                         Icons.Filled.Visibility
