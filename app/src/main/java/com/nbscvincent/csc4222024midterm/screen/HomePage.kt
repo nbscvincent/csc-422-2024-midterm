@@ -103,7 +103,6 @@ fun HomePage(
     LaunchedEffect(Unit) {
         greeting = greeting()
         qoutes = viewModel.getQuote()
-        todo = viewModel.getTodo()
 
     }
 
@@ -172,6 +171,7 @@ fun HomePage(
                 fontSize = 15.sp,
                 color = Color.Black,
             )
+
             Text(
                         text = todo,
                         fontWeight = FontWeight.SemiBold,
