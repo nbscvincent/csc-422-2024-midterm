@@ -53,11 +53,13 @@ import androidx.navigation.NavController
 
 import com.nbscvincent.csc4222024midterm.R
 import com.nbscvincent.csc4222024midterm.data.AppViewModelProvider
+
 import com.nbscvincent.csc4222024midterm.model.UserProfile
 import com.nbscvincent.csc4222024midterm.navigation.routes.MainScreen
 import com.nbscvincent.csc4222024midterm.preferences.PreferencesManager
 import com.nbscvincent.csc4222024midterm.screen.loginAlert
-import com.nbscvincent.csc4222024midterm.viewmodel.AppScreenViewModel
+import com.nbscvincent.csc4222024midterm.viewmodel.LoginScreenViewModel
+
 import com.nbscvincent.csc4222024midterm.viewmodel.ScreenViewModel
 import kotlinx.coroutines.launch
 
@@ -69,7 +71,7 @@ fun LoginScreen(
     screenViewModel: ScreenViewModel,
 
 ) {
-    val loginModel = viewModel<AppScreenViewModel>()
+    val viewModel: LoginScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -105,13 +107,7 @@ fun LoginScreen(
                     Button(
                         onClick = {
                             coroutineScope.launch {
-                                val loginData = loginModel.checkLogin(username, password)
-                                if (loginData[0].flag == 1){
-                                    openDialog.value = true
-                                }else{
-                                    screenViewModel.setLogin()
-                                    navController.navigate(MainScreen.HomePage.name)
-                                }
+                                viewModel.checkLogin(username, password)
                             }
                         },
                         modifier = Modifier

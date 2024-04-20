@@ -1,9 +1,24 @@
 package com.nbscvincent.csc4222024midterm.viewmodel
 
+import android.annotation.SuppressLint
+import android.widget.Toast
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.nbscvincent.csc4222024midterm.data.network.HttpRoutes
 import com.nbscvincent.csc4222024midterm.data.network.KtorClient
+import com.nbscvincent.csc4222024midterm.data.onlineRepository.OnlineUserRepository
+import com.nbscvincent.csc4222024midterm.model.Credentials
+import com.nbscvincent.csc4222024midterm.model.LoginResponse
+import com.nbscvincent.csc4222024midterm.navigation.routes.MainScreen
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.accept
@@ -18,59 +33,21 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import kotlinx.serialization.Serializable
 
-class AppScreenViewModel() : ViewModel() {
-    private val ktorClient: HttpClient = KtorClient()
-    suspend fun checkLogin(username:String, password:String) : List<LoginReturn> {
-        var data = mutableStateListOf<LoginReturn>()
-        try {
-            val req = ktorClient.request(
-                HttpRoutes.login
-            ){
-                method = HttpMethod.Post
-                url(HttpRoutes.login)
-                contentType(ContentType.Application.Json)
-                accept(ContentType.Application.Json)
-                setBody(MultiPartFormDataContent(formData {
-                    append("username", username)
-                    append("password", password)
-                }))
-            }
 
-            if (req.status.toString() == "200 OK"){
-                val response = req.body<ResponseLogin>()
+class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepository,     private val screenViewModel: ScreenViewModel, // Inject ScreenViewModel
+                           private val navController: NavController
+) : ViewModel() {
 
-                data.add(LoginReturn(0,"Success"))
-            }else{
-                data.add(LoginReturn(1,"Invalid credentials"))
-            }
-        } catch (e: Exception){
-            data.add(LoginReturn(1,"Invalid credentials"))
+    suspend fun checkLogin(username: String, password: String) {
+
+        val loginData = onlineUserRepository.checkLogin(username, password)
+        if (loginData[0].flag == 1){
+            print("INVALID USERNAME AND PASSWORD")
+        }else{
+            screenViewModel.setLogin()
+            navController.navigate(MainScreen.HomePage.name)
         }
-        return data
+
     }
-
-
-
 }
-
-
-
-
-data class LoginReturn(
-    var flag: Int,
-    val message: String
-)
-@Serializable
-data class ResponseLogin(
-    val id: Int,
-    val username: String,
-    val email: String,
-    val firstName: String,
-    val lastName: String,
-    val gender: String,
-    val image: String,
-    val token: String,
-)
-
-
 

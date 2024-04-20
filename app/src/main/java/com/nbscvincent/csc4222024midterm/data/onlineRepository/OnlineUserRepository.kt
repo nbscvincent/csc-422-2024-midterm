@@ -1,6 +1,7 @@
 package com.nbscvincent.csc4222024midterm.data.onlineRepository
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.ViewModel
 import com.nbscvincent.csc4222024midterm.data.network.HttpRoutes
 import com.nbscvincent.csc4222024midterm.data.network.KtorClient
 import com.nbscvincent.csc4222024midterm.model.Credentials
@@ -16,37 +17,53 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
+import kotlinx.serialization.Serializable
 
 
-class OnlineUserRepository(private val ktorClient: HttpClient = KtorClient() )  {
-    suspend fun checkLogin(username: String, password: String): List<LoginResponse> {
-        var data = mutableStateListOf<LoginResponse>()
-        try {
-            val req = ktorClient.request(
-                HttpRoutes.login
-            ) {
-                method = HttpMethod.Post
-                url(HttpRoutes.login)
-                contentType(ContentType.Application.Json)
-                accept(ContentType.Application.Json)
-                setBody(MultiPartFormDataContent(formData {
-                    append("username", username)
-                    append("password", password)
-                }))
-            }
+class OnlineUserRepository(private val ktorClient: HttpClient = KtorClient()) {
+        suspend fun checkLogin(username: String, password: String): List<LoginResponse> {
+            var data = mutableStateListOf<LoginResponse>()
+            try {
+                val req = ktorClient.request(
+                    HttpRoutes.login
+                ) {
+                    method = HttpMethod.Post
+                    url(HttpRoutes.login)
+                    contentType(ContentType.Application.Json)
+                    accept(ContentType.Application.Json)
+                    setBody(MultiPartFormDataContent(formData {
+                        append("username", username)
+                        append("password", password)
+                    }))
+                }
 
-            if (req.status.toString() == "200 OK") {
-                val response = req.body<Credentials>()
+                if (req.status.toString() == "200 OK") {
+                    val response = req.body<Credentials>()
 
-                data.add(LoginResponse(0, "Success"))
-            } else {
+                    data.add(LoginResponse(0, "Success"))
+                } else {
+                    data.add(LoginResponse(1, "Invalid credentials"))
+                }
+            } catch (e: Exception) {
                 data.add(LoginResponse(1, "Invalid credentials"))
             }
-        } catch (e: Exception) {
-            data.add(LoginResponse(1, "Invalid credentials"))
+            return data
         }
-        return data
-
-
-    }
 }
+
+
+data class LoginReturn(
+    var flag: Int,
+    val message: String
+)
+@Serializable
+data class ResponseLogin(
+    val id: Int,
+    val username: String,
+    val email: String,
+    val firstName: String,
+    val lastName: String,
+    val gender: String,
+    val image: String,
+    val token: String,
+)
