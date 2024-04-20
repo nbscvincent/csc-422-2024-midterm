@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,8 +29,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,13 +50,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+
 import com.nbscvincent.csc4222024midterm.R
 import com.nbscvincent.csc4222024midterm.data.AppViewModelProvider
+import com.nbscvincent.csc4222024midterm.model.UserProfile
 import com.nbscvincent.csc4222024midterm.navigation.routes.MainScreen
 import com.nbscvincent.csc4222024midterm.preferences.PreferencesManager
 import com.nbscvincent.csc4222024midterm.screen.loginAlert
 import com.nbscvincent.csc4222024midterm.viewmodel.LoginScreenViewModel
 import com.nbscvincent.csc4222024midterm.viewmodel.ScreenViewModel
+import com.nbscvincent.csc4222024midterm.viewmodel.UserDetails
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,7 +70,9 @@ fun LoginScreen(
     screenViewModel: ScreenViewModel,
     viewModel: LoginScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    var username by remember { mutableStateOf("") }
+
+
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val isChecked = remember { mutableStateOf(false) }
     var passwordShow: Boolean by remember { mutableStateOf(false) }
@@ -78,9 +86,6 @@ fun LoginScreen(
     val preferencesManager = remember { PreferencesManager(context) }
 
     val scrollState = rememberScrollState()
-
-    val loginResult by viewModel.loginResult.collectAsState()
-
 
 
     Scaffold(
@@ -101,19 +106,32 @@ fun LoginScreen(
                     Button(
                         onClick = {
                             coroutineScope.launch {
+                                val loginState = viewModel.userUiState
+                                loginState.userDetails = UserDetails(email, password)
+                                val flow : Flow<UserProfile?>? = viewModel.selectUser()
 
-                                if (loginResult.isSuccess) {
-                                    val userProfile = loginResult.getOrNull()
-                                    if (userProfile != null) {
-                                        // Save login state and username to preferences
-                                        preferencesManager.saveData("login", "true")
-                                        preferencesManager.saveData("username", userProfile.username)
+                                if (flow != null) {
+                                    flow.collect {
 
-                                        // Navigate to home page
-                                        navController.navigate(MainScreen.Splash.name)
-                                    } else {
-                                        openDialog.value = true
+                                        if (it != null) {
+                                            if (it.username.isEmpty()){
+                                                openDialog.value = true
+                                            }else {
+                                                screenViewModel.setLogin()
+
+                                                preferencesManager.saveData("login", "true")
+                                                preferencesManager.saveData("username", it.username)
+
+
+                                                navController.navigate(MainScreen.Splash.name)
+                                            }
+                                        }else{
+                                            openDialog.value = true
+                                        }
                                     }
+                                }else{
+                                    // no record found
+                                    openDialog.value = true
                                 }
                             }
                         },
@@ -134,29 +152,7 @@ fun LoginScreen(
                             color = Color.White,
                         )
                     }
-//                    Row(
-//                        modifier = Modifier
-//                            .fillMaxWidth(),
-//                        horizontalArrangement = Arrangement.Center,
-//                        verticalAlignment = Alignment.CenterVertically
-//                    ) {
-//                        Text(
-//                            text = "Don't have account? ",
-//                            fontWeight = FontWeight.Normal,
-//                            fontSize = 15.sp,
-//                            color = Color.Black,
-//                        )
-//                        TextButton(
-//                            onClick = { navController.navigate(MainScreen.RegistrationScreen.name) })
-//                        {
-//                            Text(
-//                                text = "Sign Up",
-//                                fontWeight = FontWeight.ExtraBold,
-//                                fontSize = 17.sp,
-//                                color = Color.Red,
-//                            )
-//                        }
-//                    }
+
                 }
             }
         }
@@ -193,13 +189,13 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 25.dp, end = 25.dp),
-                value = username,
+                value = email,
                 shape = RoundedCornerShape(10.dp),
-                onValueChange = { username = it },
+                onValueChange = { email = it },
                 label = { Text(text = "Username", color = Color.Black) },
-//                colors = TextFieldDefaults.outlinedTextFieldColors(
-//                    textColor = Color.Black
-//                ),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+
+                ),
                 trailingIcon = {
                     Icon(imageVector = Icons.Default.Email, contentDescription = "Email" , tint = Color.Red)
                 },
@@ -215,13 +211,13 @@ fun LoginScreen(
                 onValueChange = { password = it },
                 label = { Text(text = "Password", color = Color.Black) },
 
-//                colors = TextFieldDefaults.outlinedTextFieldColors(
-//                    textColor = Color.Black,
-//
-//                    unfocusedBorderColor = Color.Gray, // Change to desired color when not focused
-//
-//
-//                ),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+
+
+                    unfocusedBorderColor = Color.Gray, // Change to desired color when not focused
+
+
+                ),
                 trailingIcon = {
                     val image = if (passwordShow)
                         Icons.Filled.Visibility

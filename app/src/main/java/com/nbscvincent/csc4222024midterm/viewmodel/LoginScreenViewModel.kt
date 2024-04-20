@@ -1,11 +1,14 @@
 package com.nbscvincent.csc4222024midterm.viewmodel
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.nbscvincent.csc4222024midterm.data.offlineRepository.OfflineUserRepository
+
 import com.nbscvincent.csc4222024midterm.data.onlineRepository.OnlineUserRepository
-import com.nbscvincent.csc4222024midterm.model.Credentials
+
+import com.nbscvincent.csc4222024midterm.model.UserProfile
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -13,7 +16,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
-class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepository, private val offlineUserRepository: OfflineUserRepository) : ViewModel() {
+class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepository) : ViewModel() {
 
     /**
      * Holds current user ui state
@@ -30,7 +33,7 @@ class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepositor
             //flow = usersRepository.getUserPasswordStream(userDetails.username, userDetails.password)
             try {
                 flow = onlineUserRepository.getUserPasswordStream(userDetails.username, userDetails.password);
-                offlineUserRepository.getUserPasswordStream(userDetails.username, userDetails.password)
+
             } catch (e: Exception){
                 Timber.i("SAMPLE $e")
             }
@@ -65,8 +68,6 @@ data class UserDetails(
 fun UserDetails.toUser(): UserProfile = UserProfile(
     username = username,
     password = password,
-    firstName = firstName,
-    lastName = lastName
 )
 /**
  * Extension function to convert [Item] to [ItemUiState]
@@ -81,6 +82,5 @@ fun UserProfile.toUserUiState(isEntryValid: Boolean = false): UserUiState = User
 fun UserProfile.toUserDetails(): UserDetails = UserDetails(
     username = username,
     password  = password,
-    firstName = firstName,
-    lastName = lastName
+
 )

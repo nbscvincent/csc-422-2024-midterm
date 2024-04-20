@@ -20,49 +20,10 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class OnlineUserRepository(private val ktorClient: HttpClient = KtorClient() ) : UserRepository {
-    override fun getAllUsersStream(): Flow<List<UserProfile>> {
-        TODO("Not yet implemented")
-    }
 
-    override suspend fun getUserStream(id: String): Flow<UserProfile?> {
-        val cl = ktorClient.request(
-            HttpRoutes.login
-        ) {
-            method = HttpMethod.Post
-            url(HttpRoutes.login)
-            contentType(ContentType.Application.Json)
-            accept(ContentType.Application.Json)
-            setBody(MultiPartFormDataContent(formData {
-                append("type", "check_login")
-                append("username", id)
-            }))
-        }
-
-        return flow {
-            emit(cl.body())
-        }
-    }
-
-    // login
-    override suspend fun getUserPasswordStream(username: String, password: String): Flow<UserProfile?> {
-        val cl = ktorClient.request(
-            HttpRoutes.login
-        ) {
-            method = HttpMethod.Post
-            url(HttpRoutes.login)
-            contentType(ContentType.Application.Json)
-            accept(ContentType.Application.Json)
-            setBody(MultiPartFormDataContent(formData {
-                append("type", "login")
-                append("username", username)
-                append("password", password)
-            }))
-        }
-        return flow {
-            emit(cl.body())
-        }
-    }
-
+class OfflineUserRepository(private val userDao: UserProfileDao) : UserRepository {
+    override fun getAllUsersStream(): Flow<List<UserProfile>> = userDao.getAllUsers()
+    override suspend fun getUserStream(id: String): Flow<UserProfile?> = userDao.getUsers(id)
+    override suspend fun getUserPasswordStream(username: String, password: String): Flow<UserProfile?> = userDao.getUsersPass(username, password)
 
 }
