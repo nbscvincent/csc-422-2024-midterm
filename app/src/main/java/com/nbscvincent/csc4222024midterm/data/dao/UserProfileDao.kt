@@ -1,7 +1,11 @@
 package com.nbscvincent.csc4222024midterm.data.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.nbscvincent.csc4222024midterm.model.UserProfile
 import kotlinx.coroutines.flow.Flow
 
@@ -15,6 +19,15 @@ interface UserProfileDao {
 
     @Query("SELECT * FROM user WHERE username = :username AND password = :password")
     fun getUsersPass(username: String, password: String): Flow<UserProfile>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(user: UserProfile)
+
+    @Update
+    suspend fun update(user: UserProfile)
+
+    @Delete
+    suspend fun delete(user: UserProfile)
 
 
 }

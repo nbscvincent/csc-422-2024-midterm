@@ -57,22 +57,21 @@ import com.nbscvincent.csc4222024midterm.model.UserProfile
 import com.nbscvincent.csc4222024midterm.navigation.routes.MainScreen
 import com.nbscvincent.csc4222024midterm.preferences.PreferencesManager
 import com.nbscvincent.csc4222024midterm.screen.loginAlert
-import com.nbscvincent.csc4222024midterm.viewmodel.LoginScreenViewModel
+import com.nbscvincent.csc4222024midterm.viewmodel.AppScreenViewModel
 import com.nbscvincent.csc4222024midterm.viewmodel.ScreenViewModel
-import com.nbscvincent.csc4222024midterm.viewmodel.UserDetails
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     navController: NavController,
     screenViewModel: ScreenViewModel,
-    viewModel: LoginScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
+
 ) {
+    val loginModel = viewModel<AppScreenViewModel>()
 
-
-    var email by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val isChecked = remember { mutableStateOf(false) }
     var passwordShow: Boolean by remember { mutableStateOf(false) }
@@ -106,32 +105,12 @@ fun LoginScreen(
                     Button(
                         onClick = {
                             coroutineScope.launch {
-                                val loginState = viewModel.userUiState
-                                loginState.userDetails = UserDetails(email, password)
-                                val flow : Flow<UserProfile?>? = viewModel.selectUser()
-
-                                if (flow != null) {
-                                    flow.collect {
-
-                                        if (it != null) {
-                                            if (it.username.isEmpty()){
-                                                openDialog.value = true
-                                            }else {
-                                                screenViewModel.setLogin()
-
-                                                preferencesManager.saveData("login", "true")
-                                                preferencesManager.saveData("username", it.username)
-
-
-                                                navController.navigate(MainScreen.Splash.name)
-                                            }
-                                        }else{
-                                            openDialog.value = true
-                                        }
-                                    }
-                                }else{
-                                    // no record found
+                                val loginData = loginModel.checkLogin(username, password)
+                                if (loginData[0].flag == 1){
                                     openDialog.value = true
+                                }else{
+                                    screenViewModel.setLogin()
+                                    navController.navigate(MainScreen.HomePage.name)
                                 }
                             }
                         },
@@ -189,9 +168,9 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 25.dp, end = 25.dp),
-                value = email,
+                value = username,
                 shape = RoundedCornerShape(10.dp),
-                onValueChange = { email = it },
+                onValueChange = { username = it },
                 label = { Text(text = "Username", color = Color.Black) },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
 

@@ -1,86 +1,76 @@
 package com.nbscvincent.csc4222024midterm.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import com.nbscvincent.csc4222024midterm.data.network.HttpRoutes
+import com.nbscvincent.csc4222024midterm.data.network.KtorClient
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.accept
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.request
+import io.ktor.client.request.setBody
+import io.ktor.client.request.url
+import io.ktor.client.utils.EmptyContent.contentType
+import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
+import io.ktor.http.contentType
+import kotlinx.serialization.Serializable
 
-import com.nbscvincent.csc4222024midterm.data.onlineRepository.OnlineUserRepository
-
-import com.nbscvincent.csc4222024midterm.model.UserProfile
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.launch
-import timber.log.Timber
-
-
-class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepository) : ViewModel() {
-
-    /**
-     * Holds current user ui state
-     */
-    var userUiState by mutableStateOf(UserUiState())
-        private set
-    /**
-     * Select a [User] in the Room database
-     */
-    suspend fun selectUser(userDetails: UserDetails = userUiState.userDetails): Flow<UserProfile?>? {
-        var flow : Flow<UserProfile?>? = null
-
-        if (validateInput()) {
-            //flow = usersRepository.getUserPasswordStream(userDetails.username, userDetails.password)
-            try {
-                flow = onlineUserRepository.getUserPasswordStream(userDetails.username, userDetails.password);
-
-            } catch (e: Exception){
-                Timber.i("SAMPLE $e")
+class AppScreenViewModel() : ViewModel() {
+    private val ktorClient: HttpClient = KtorClient()
+    suspend fun checkLogin(username:String, password:String) : List<LoginReturn> {
+        var data = mutableStateListOf<LoginReturn>()
+        try {
+            val req = ktorClient.request(
+                HttpRoutes.login
+            ){
+                method = HttpMethod.Post
+                url(HttpRoutes.login)
+                contentType(ContentType.Application.Json)
+                accept(ContentType.Application.Json)
+                setBody(MultiPartFormDataContent(formData {
+                    append("username", username)
+                    append("password", password)
+                }))
             }
+
+            if (req.status.toString() == "200 OK"){
+                val response = req.body<ResponseLogin>()
+
+                data.add(LoginReturn(0,"Success"))
+            }else{
+                data.add(LoginReturn(1,"Invalid credentials"))
+            }
+        } catch (e: Exception){
+            data.add(LoginReturn(1,"Invalid credentials"))
         }
-        return flow
+        return data
     }
-    private fun validateInput(uiState: UserDetails = userUiState.userDetails): Boolean {
-        return with(uiState) {
-            username.isNotBlank() && password.isNotBlank()
-        }
-    }
+
+
+
 }
-/**
- * Represents Ui State for an User.
- */
-data class UserUiState(
-    var userDetails: UserDetails = UserDetails(),
-    val isEntryValid: Boolean = false,
-)
-data class UserDetails(
-    val username: String = "",
-    val password: String = "",
-    val firstName: String = "",
 
-    val lastName: String = ""
-)
-/**
- * Extension function to convert [UserUiState] to [User]. If the value of [UserDetails.price] is
- * not a valid [Double], then the price will be set to 0.0. Similarly if the value of
- * [UserUiState] is not a valid [Int], then the quantity will be set to 0
- */
-fun UserDetails.toUser(): UserProfile = UserProfile(
-    username = username,
-    password = password,
-)
-/**
- * Extension function to convert [Item] to [ItemUiState]
- */
-fun UserProfile.toUserUiState(isEntryValid: Boolean = false): UserUiState = UserUiState(
-    userDetails = this.toUserDetails(),
-    isEntryValid = isEntryValid
-)
-/**
- * Extension function to convert [Item] to [ItemDetails]
- */
-fun UserProfile.toUserDetails(): UserDetails = UserDetails(
-    username = username,
-    password  = password,
 
+
+
+data class LoginReturn(
+    var flag: Int,
+    val message: String
 )
+@Serializable
+data class ResponseLogin(
+    val id: Int,
+    val username: String,
+    val email: String,
+    val firstName: String,
+    val lastName: String,
+    val gender: String,
+    val image: String,
+    val token: String,
+)
+
+
+

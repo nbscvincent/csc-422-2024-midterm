@@ -1,9 +1,10 @@
 package com.nbscvincent.csc4222024midterm.data.onlineRepository
 
+import androidx.compose.runtime.mutableStateListOf
 import com.nbscvincent.csc4222024midterm.data.network.HttpRoutes
 import com.nbscvincent.csc4222024midterm.data.network.KtorClient
-import com.nbscvincent.csc4222024midterm.data.repository.UserRepository
-import com.nbscvincent.csc4222024midterm.model.UserProfile
+import com.nbscvincent.csc4222024midterm.model.Credentials
+import com.nbscvincent.csc4222024midterm.model.LoginResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.accept
@@ -15,54 +16,37 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 
-class OnlineUserRepository(private val ktorClient: HttpClient = KtorClient() ) : UserRepository {
-    override fun getAllUsersStream(): Flow<List<UserProfile>> {
-        TODO("Not yet implemented")
+class OnlineUserRepository(private val ktorClient: HttpClient = KtorClient() )  {
+    suspend fun checkLogin(username: String, password: String): List<LoginResponse> {
+        var data = mutableStateListOf<LoginResponse>()
+        try {
+            val req = ktorClient.request(
+                HttpRoutes.login
+            ) {
+                method = HttpMethod.Post
+                url(HttpRoutes.login)
+                contentType(ContentType.Application.Json)
+                accept(ContentType.Application.Json)
+                setBody(MultiPartFormDataContent(formData {
+                    append("username", username)
+                    append("password", password)
+                }))
+            }
+
+            if (req.status.toString() == "200 OK") {
+                val response = req.body<Credentials>()
+
+                data.add(LoginResponse(0, "Success"))
+            } else {
+                data.add(LoginResponse(1, "Invalid credentials"))
+            }
+        } catch (e: Exception) {
+            data.add(LoginResponse(1, "Invalid credentials"))
+        }
+        return data
+
+
     }
-
-    override suspend fun getUserStream(id: String): Flow<UserProfile?> {
-        val cl = ktorClient.request(
-            HttpRoutes.login
-        ) {
-            method = HttpMethod.Post
-            url(HttpRoutes.login)
-            contentType(ContentType.Application.Json)
-            accept(ContentType.Application.Json)
-            setBody(MultiPartFormDataContent(formData {
-                append("type", "check_login")
-                append("username", id)
-            }))
-        }
-
-        return flow {
-            emit(cl.body())
-        }
-    }
-
-    // login
-    override suspend fun getUserPasswordStream(username: String, password: String): Flow<UserProfile?> {
-        val cl = ktorClient.request(
-            HttpRoutes.login
-        ) {
-            method = HttpMethod.Post
-            url(HttpRoutes.login)
-            contentType(ContentType.Application.Json)
-            accept(ContentType.Application.Json)
-            setBody(MultiPartFormDataContent(formData {
-                append("type", "login")
-                append("username", username)
-                append("password", password)
-            }))
-        }
-        return flow {
-            emit(cl.body())
-        }
-    }
-    // end login
-
-
 }
