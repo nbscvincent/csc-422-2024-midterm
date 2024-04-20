@@ -71,6 +71,25 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    val room_version = "2.6.0"
+
+    //Room
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.core:core-ktx:1.10.1")
+    ksp("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+
+    val nav_version = "2.7.4"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    val work_version = "2.9.0"
+    // Kotlin + coroutines
+    implementation("androidx.work:work-runtime-ktx:$work_version")
+
     // ktor for networking
     val ktor_version = "2.2.2"
     implementation("io.ktor:ktor-client-core:$ktor_version")
@@ -83,8 +102,9 @@ dependencies {
     implementation("io.ktor:ktor-server-http-redirect:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-
-
+    ksp ("com.google.dagger:hilt-android-compiler:2.45")
+    ksp ("androidx.hilt:hilt-compiler:1.0.0")
+    implementation ("com.jakewharton.timber:timber:5.0.1")
     //Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.45")
 
