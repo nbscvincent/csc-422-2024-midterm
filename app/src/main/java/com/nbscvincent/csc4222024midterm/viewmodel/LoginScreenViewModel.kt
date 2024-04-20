@@ -34,20 +34,16 @@ import io.ktor.http.contentType
 import kotlinx.serialization.Serializable
 
 
-class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepository,     private val screenViewModel: ScreenViewModel, // Inject ScreenViewModel
-                           private val navController: NavController
-) : ViewModel() {
+class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepository) : ViewModel() {
 
-    suspend fun checkLogin(username: String, password: String) {
-
+    suspend fun checkLogin(username: String, password: String, screenViewModel: ScreenViewModel, navController: NavController) {
         val loginData = onlineUserRepository.checkLogin(username, password)
         if (loginData[0].flag == 1){
             print("INVALID USERNAME AND PASSWORD")
-        }else{
+        } else {
             screenViewModel.setLogin()
             navController.navigate(MainScreen.HomePage.name)
         }
-
     }
 }
 

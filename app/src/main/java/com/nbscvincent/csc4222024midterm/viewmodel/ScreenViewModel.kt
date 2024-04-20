@@ -22,7 +22,6 @@ class ScreenViewModel : ViewModel() {
             _loading.value = false
         }
     }
-
     fun checkLogin(): Boolean {
         return _isLogin.value
     }

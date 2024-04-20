@@ -21,8 +21,8 @@ import kotlinx.serialization.Serializable
 
 
 class OnlineUserRepository(private val ktorClient: HttpClient = KtorClient()) {
-        suspend fun checkLogin(username: String, password: String): List<LoginResponse> {
-            var data = mutableStateListOf<LoginResponse>()
+        suspend fun checkLogin(username: String, password: String): List<LoginReturn> {
+            var data = mutableStateListOf<LoginReturn>()
             try {
                 val req = ktorClient.request(
                     HttpRoutes.login
@@ -40,12 +40,12 @@ class OnlineUserRepository(private val ktorClient: HttpClient = KtorClient()) {
                 if (req.status.toString() == "200 OK") {
                     val response = req.body<Credentials>()
 
-                    data.add(LoginResponse(0, "Success"))
+                    data.add(LoginReturn(0, "Success"))
                 } else {
-                    data.add(LoginResponse(1, "Invalid credentials"))
+                    data.add(LoginReturn(1, "Invalid credentials"))
                 }
             } catch (e: Exception) {
-                data.add(LoginResponse(1, "Invalid credentials"))
+                data.add(LoginReturn(1, "Invalid credentials"))
             }
             return data
         }

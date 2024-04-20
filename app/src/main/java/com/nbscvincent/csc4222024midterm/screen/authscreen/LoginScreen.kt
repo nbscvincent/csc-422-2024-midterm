@@ -73,8 +73,8 @@ fun LoginScreen(
 ) {
     val viewModel: LoginScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("kminchelle") }
+    var password by remember { mutableStateOf("0lelplR") }
     val isChecked = remember { mutableStateOf(false) }
     var passwordShow: Boolean by remember { mutableStateOf(false) }
     val openDialog = remember { mutableStateOf(false) }
@@ -107,7 +107,7 @@ fun LoginScreen(
                     Button(
                         onClick = {
                             coroutineScope.launch {
-                                viewModel.checkLogin(username, password)
+                                viewModel.checkLogin(username, password, screenViewModel, navController)
                             }
                         },
                         modifier = Modifier
