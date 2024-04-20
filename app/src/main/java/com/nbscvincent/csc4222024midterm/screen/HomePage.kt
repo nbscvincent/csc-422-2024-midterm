@@ -96,10 +96,14 @@ fun HomePage(
 
     var greeting by remember { mutableStateOf("") }
     var qoutes by remember { mutableStateOf("") }
+    var todo by remember { mutableStateOf("") }
+
 
     LaunchedEffect(Unit) {
         greeting = greeting()
         qoutes = viewModel.getQuote()
+        todo = viewModel.getTodo()
+
     }
 
 
