@@ -18,6 +18,7 @@ import com.nbscvincent.csc4222024midterm.navigation.routes.MainScreen
 import com.nbscvincent.csc4222024midterm.preferences.PreferencesManager
 import com.nbscvincent.csc4222024midterm.screen.authscreen.LoginScreen
 import com.nbscvincent.csc4222024midterm.viewmodel.ScreenViewModel
+import com.nbscvincent.csc4222024midterm.viewmodel.ToDoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,10 +65,12 @@ fun CheckLogin( screenViewModel: ScreenViewModel ){
 @Composable
 fun MainLogin(
 
-    screenViewModel: ScreenViewModel
+    screenViewModel: ScreenViewModel,
+
 ){
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val navController: NavHostController = rememberNavController()
+
 
     Scaffold {
         Column(modifier = Modifier.padding(it)) {
@@ -103,7 +106,6 @@ fun MainHomeScreen(
     screenViewModel: ScreenViewModel
 ){
 
-
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager(context) }
 
@@ -128,15 +130,16 @@ fun MainHomeScreen(
             composable(route = MainScreen.HomePage.name) {
                 HomePage(navController, screenViewModel)
             }
+            composable(route = MainScreen.Profile.name) {
+                ToDos(navController, screenViewModel)
+            }
             composable(route = MainScreen.CheckLogin.name) {
                 CheckLogin(screenViewModel)
             }
             composable(route = MainScreen.Splash.name) {
                 SplashScreen(navController, screenViewModel)
             }
-//            composable(route = MainScreen.Profile.name) {
-//                Profile(navController, screenViewModel)
-//            }
+
 
         }
     }

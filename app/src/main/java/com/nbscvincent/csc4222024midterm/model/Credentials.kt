@@ -13,3 +13,8 @@ data class Credentials(
     val image: String,
     val token: String,
 )
+
+data class LoginResonse(
+    var flag: Int,
+    val message: String
+)

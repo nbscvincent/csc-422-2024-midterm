@@ -70,18 +70,12 @@ import java.util.Calendar
 @Composable
 fun ToDos(
     navController: NavController,
-//    drawerState: DrawerState,
     screenViewModel: ScreenViewModel
 ) {
 
-    val viewModel: LoginScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager(context) }
-    val username = preferencesManager.getData("username", "")
-    val coroutineScope = rememberCoroutineScope()
 
-    val application = LocalContext.current.applicationContext as Application
-    val workManager = WorkManager.getInstance(application)
 
 
     Scaffold(
@@ -110,10 +104,6 @@ fun ToDos(
                 Button(onClick = {
 
                     screenViewModel.unsetLogin()
-                    preferencesManager.saveData("login", "")
-                    preferencesManager.saveData("username", "")
-                    preferencesManager.saveData("firstName", "")
-                    preferencesManager.saveData("lastName", "")
                     navController.navigate(MainScreen.Splash.name)
 
                 }) {

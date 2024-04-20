@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -63,7 +64,9 @@ import com.nbscvincent.csc4222024midterm.preferences.PreferencesManager
 import com.nbscvincent.csc4222024midterm.viewmodel.LoginScreenViewModel
 
 import com.nbscvincent.csc4222024midterm.viewmodel.ScreenViewModel
+import com.nbscvincent.csc4222024midterm.viewmodel.ToDoViewModel
 import kotlinx.coroutines.coroutineScope
+import timber.log.Timber
 import java.util.Calendar
 
 @SuppressLint("CoroutineCreationDuringComposition", "UnusedMaterial3ScaffoldPaddingParameter")
@@ -72,10 +75,15 @@ import java.util.Calendar
 fun HomePage(
     navController: NavController,
 //    drawerState: DrawerState,
-    screenViewModel: ScreenViewModel
+    screenViewModel: ScreenViewModel,
+
 ) {
 
     val viewModel: LoginScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
+
+    val toDoViewModel = viewModel<ToDoViewModel>()
+
+
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager(context) }
     val username = preferencesManager.getData("username", "")
@@ -88,10 +96,13 @@ fun HomePage(
 
     var greeting by remember { mutableStateOf("") }
     var qoutes by remember { mutableStateOf("") }
-    coroutineScope.launch {
+
+    LaunchedEffect(Unit) {
         greeting = greeting()
         qoutes = viewModel.getQuote()
     }
+
+
 
 
 
@@ -162,16 +173,15 @@ fun HomePage(
                 fontSize = 15.sp,
                 color = Color.Black,
             )
+            Text(
+                        text = todo,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 15.sp,
+                        color = Color.Black,
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
 
-
-        }
-
-
-
-
-
-
-
+            }
 
 
         }

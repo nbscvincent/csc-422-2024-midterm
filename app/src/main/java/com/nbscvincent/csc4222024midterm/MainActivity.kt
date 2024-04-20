@@ -18,6 +18,7 @@ import com.nbscvincent.csc4222024midterm.screen.MainLogin
 import com.nbscvincent.csc4222024midterm.screen.authscreen.LoginScreen
 import com.nbscvincent.csc4222024midterm.ui.theme.CSC4222024MidtermTheme
 import com.nbscvincent.csc4222024midterm.viewmodel.ScreenViewModel
+import com.nbscvincent.csc4222024midterm.viewmodel.ToDoViewModel
 import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
@@ -29,6 +30,7 @@ class MainActivity : ComponentActivity() {
                 Timber.plant(Timber.DebugTree())
 
                 val screenViewModel: ScreenViewModel by viewModels();
+
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),

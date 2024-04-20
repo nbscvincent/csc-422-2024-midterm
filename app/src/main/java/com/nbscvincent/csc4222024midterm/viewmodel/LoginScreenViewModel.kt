@@ -19,6 +19,7 @@ import com.nbscvincent.csc4222024midterm.data.onlineRepository.OnlineUserReposit
 import com.nbscvincent.csc4222024midterm.model.Credentials
 import com.nbscvincent.csc4222024midterm.model.LoginResponse
 import com.nbscvincent.csc4222024midterm.model.ResponseQoutes
+import com.nbscvincent.csc4222024midterm.model.ToDo
 import com.nbscvincent.csc4222024midterm.navigation.routes.MainScreen
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -33,6 +34,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import kotlinx.serialization.Serializable
+import timber.log.Timber
 
 
 class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepository) : ViewModel() {
@@ -46,6 +48,7 @@ class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepositor
             navController.navigate(MainScreen.HomePage.name)
         }
     }
+
     private val ktorClient: HttpClient = KtorClient()
     suspend fun getQuote() : String {
         var quote: String = ""
@@ -70,6 +73,32 @@ class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepositor
             //data.add(LoginReturn(1,"Invalid credentials"))
         }
         return quote
+    }
+
+    suspend fun getTodo() : String {
+        var todo: String = ""
+        try {
+            val req = ktorClient.request(
+                HttpRoutes.todos
+            ){
+                method = HttpMethod.Get
+                url(HttpRoutes.todos)
+                contentType(ContentType.Application.Json)
+                accept(ContentType.Application.Json)
+            }
+            if (req.status.toString() == "200 OK") { // Check for successful response
+                val response = req.body<ToDo>()
+                todo = response.todo
+            } else {
+                // Log error response code
+                Timber.e("Failed to fetch TODO data. Response code: ${req.status}")
+            }
+
+        } catch (e: Exception){
+            // Log any exceptions
+            Timber.e("Failed to fetch TODO data. Exception: $e")
+        }
+        return todo
     }
 
 }

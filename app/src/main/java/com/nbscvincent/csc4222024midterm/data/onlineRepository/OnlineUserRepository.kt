@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.nbscvincent.csc4222024midterm.data.network.HttpRoutes
 import com.nbscvincent.csc4222024midterm.data.network.KtorClient
 import com.nbscvincent.csc4222024midterm.model.Credentials
+import com.nbscvincent.csc4222024midterm.model.LoginResonse
 import com.nbscvincent.csc4222024midterm.model.LoginResponse
 import com.nbscvincent.csc4222024midterm.model.ResponseQoutes
 import io.ktor.client.HttpClient
@@ -23,8 +24,8 @@ import kotlinx.serialization.Serializable
 
 
 class OnlineUserRepository(private val ktorClient: HttpClient = KtorClient()) {
-        suspend fun checkLogin(username: String, password: String): List<LoginReturn> {
-            var data = mutableStateListOf<LoginReturn>()
+        suspend fun checkLogin(username: String, password: String): List<LoginResonse> {
+            var data = mutableStateListOf<LoginResonse>()
             try {
                 val req = ktorClient.request(
                     HttpRoutes.login
@@ -42,16 +43,15 @@ class OnlineUserRepository(private val ktorClient: HttpClient = KtorClient()) {
                 if (req.status.toString() == "200 OK") {
                     val response = req.body<Credentials>()
 
-                    data.add(LoginReturn(0, "Success"))
+                    data.add(LoginResonse(0, "Success"))
                 } else {
-                    data.add(LoginReturn(1, "Invalid credentials"))
+                    data.add(LoginResonse(1, "Invalid credentials"))
                 }
             } catch (e: Exception) {
-                data.add(LoginReturn(1, "Invalid credentials"))
+                data.add(LoginResonse(1, "Invalid credentials"))
             }
             return data
         }
-
     suspend fun getQoutes() : String {
         var quote: String = ""
         try {
@@ -79,18 +79,5 @@ class OnlineUserRepository(private val ktorClient: HttpClient = KtorClient()) {
 }
 
 
-data class LoginReturn(
-    var flag: Int,
-    val message: String
-)
-@Serializable
-data class ResponseLogin(
-    val id: Int,
-    val username: String,
-    val email: String,
-    val firstName: String,
-    val lastName: String,
-    val gender: String,
-    val image: String,
-    val token: String,
-)
+
+
