@@ -1,10 +1,14 @@
 package com.nbscvincent.csc4222024midterm.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.nbscvincent.csc4222024midterm.data.network.HttpRoutes
 import com.nbscvincent.csc4222024midterm.data.network.KtorClient
 import com.nbscvincent.csc4222024midterm.data.onlineRepository.OnlineToDoRepository
 import com.nbscvincent.csc4222024midterm.data.onlineRepository.OnlineUserRepository
+import com.nbscvincent.csc4222024midterm.data.repository.ToDoRepository
 import com.nbscvincent.csc4222024midterm.model.ResponseQoutes
 import com.nbscvincent.csc4222024midterm.model.ToDo
 import io.ktor.client.HttpClient
@@ -18,33 +22,17 @@ import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import timber.log.Timber
 
-class ToDoViewModel(): ViewModel() {
+class ToDoViewModel(private val toDoRepository: ToDoRepository): ViewModel() {
+    var todoUiState by mutableStateOf(ToDoUiState())
 
-    private val ktorClient: HttpClient = KtorClient()
-    suspend fun getTodo() : String {
-        var todo: String = ""
-        try {
-            val req = ktorClient.request(
-                HttpRoutes.todos
-            ){
-                method = HttpMethod.Get
-                url(HttpRoutes.todos)
-                contentType(ContentType.Application.Json)
-                accept(ContentType.Application.Json)
-            }
-
-            if (req.status.toString() == "200 OK") { // Check for successful response
-                val response = req.body<ToDo>()
-                todo = response.todo
-            } else {
-                // Log error response code
-                Timber.e("Failed to fetch TODO data. Response code: ${req.status}")
-            }
-
-        } catch (e: Exception){
-            // Log any exceptions
-            Timber.e("Failed to fetch TODO data. Exception: $e")
-        }
-        return todo
+    suspend fun getToDo() {
+        val todo = toDoRepository.getToDo()
+        todoUiState =
+            ToDoUiState(todo = todo)
+        Timber.i("postsUiState $todoUiState")
     }
+
+    data class ToDoUiState(
+        var todo: List<ToDo> = emptyList()
+    )
 }

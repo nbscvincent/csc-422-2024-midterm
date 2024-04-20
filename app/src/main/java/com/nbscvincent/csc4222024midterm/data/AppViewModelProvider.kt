@@ -18,6 +18,10 @@ object AppViewModelProvider {
             )
         }
 
+        initializer {
+            ToDoViewModel(ktorApplication().container.onlineToDoRepository)
+        }
+
 
 
 

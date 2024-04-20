@@ -75,31 +75,7 @@ class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepositor
         return quote
     }
 
-    suspend fun getTodo() : String {
-        var todo: String = ""
-        try {
-            val req = ktorClient.request(
-                HttpRoutes.todos
-            ){
-                method = HttpMethod.Get
-                url(HttpRoutes.todos)
-                contentType(ContentType.Application.Json)
-                accept(ContentType.Application.Json)
-            }
-            if (req.status.toString() == "200 OK") { // Check for successful response
-                val response = req.body<ToDo>()
-                todo = response.todo
-            } else {
-                // Log error response code
-                Timber.e("Failed to fetch TODO data. Response code: ${req.status}")
-            }
 
-        } catch (e: Exception){
-            // Log any exceptions
-            Timber.e("Failed to fetch TODO data. Exception: $e")
-        }
-        return todo
-    }
 
 }
 

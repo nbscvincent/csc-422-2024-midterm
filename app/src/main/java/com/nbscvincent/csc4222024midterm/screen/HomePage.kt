@@ -82,7 +82,7 @@ fun HomePage(
 
     val viewModel: LoginScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 
-    val toDoViewModel = viewModel<ToDoViewModel>()
+
 
 
     val context = LocalContext.current
@@ -105,13 +105,6 @@ fun HomePage(
         qoutes = viewModel.getQuote()
 
     }
-
-
-
-
-
-
-
 
     Scaffold(
         topBar = {
@@ -196,6 +189,24 @@ fun HomePage(
                     color = Color.White,
                 )
             }
+
+            Button(
+                onClick = {
+
+                    navController.navigate(MainScreen.Recipes.name)
+
+                },
+
+                ) {
+                Text(
+                    text = "Recipes",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.White,
+                )
+            }
+
+
 
             }
 

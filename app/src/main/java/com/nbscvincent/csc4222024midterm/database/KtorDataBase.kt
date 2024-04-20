@@ -4,12 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.nbscvincent.csc4222024midterm.data.dao.ToDoDao
 import com.nbscvincent.csc4222024midterm.data.dao.UserProfileDao
+import com.nbscvincent.csc4222024midterm.model.ToDo
 import com.nbscvincent.csc4222024midterm.model.UserProfile
 
-@Database(entities = [UserProfile::class,], version = 1, exportSchema = true)
+@Database(entities = [UserProfile::class, ToDo::class,], version = 1, exportSchema = true)
 abstract class KtorDatabase : RoomDatabase() {
     abstract fun UserProfileDao(): UserProfileDao
+    abstract fun ToDoDao(): ToDoDao
 
     companion object {
         @Volatile

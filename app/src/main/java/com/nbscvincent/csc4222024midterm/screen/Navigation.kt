@@ -98,6 +98,9 @@ fun MainLogin(
             composable(route = MainScreen.ToDos.name) {
                 ToDos(navController, screenViewModel)
             }
+            composable(route = MainScreen.Recipes.name) {
+                Recipes(navController, screenViewModel)
+            }
         }
     }
 }

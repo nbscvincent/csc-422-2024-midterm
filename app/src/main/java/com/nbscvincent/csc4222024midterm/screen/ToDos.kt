@@ -1,6 +1,7 @@
 package com.nbscvincent.csc4222024midterm.screen
 import android.annotation.SuppressLint
 import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -62,10 +63,13 @@ import com.nbscvincent.csc4222024midterm.preferences.PreferencesManager
 import com.nbscvincent.csc4222024midterm.viewmodel.LoginScreenViewModel
 
 import com.nbscvincent.csc4222024midterm.viewmodel.ScreenViewModel
+import com.nbscvincent.csc4222024midterm.viewmodel.ToDoViewModel
 import kotlinx.coroutines.coroutineScope
+import timber.log.Timber
 import java.util.Calendar
 
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToDos(
@@ -73,6 +77,11 @@ fun ToDos(
     screenViewModel: ScreenViewModel
 ) {
 
+    val viewModel: ToDoViewModel = viewModel(factory = AppViewModelProvider.Factory)
+
+    val coroutineScope = rememberCoroutineScope()
+
+    val todoState = viewModel.todoUiState
 
 
     Scaffold(
@@ -122,11 +131,30 @@ fun ToDos(
         ) {
             Spacer(modifier = Modifier.height(50.dp))
 
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        viewModel.getToDo()
+                    }
+                },
+
+                ) {
+                Text("Get To-Do-List")
+            }
+            LazyColumn {
+                items(todoState.todo) { todo ->
+                    Card(modifier = Modifier.padding(11.dp)) {
+                        Text(todo.id.toString())
+                        Text(todo.todo)
+                        Text(todo.userID.toString())
+                        Text(todo.completed.toString())
+                    }
+                }
+            }
 
 
 
         }
-
 
 
 
