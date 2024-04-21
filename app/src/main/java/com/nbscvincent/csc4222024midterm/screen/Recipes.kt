@@ -38,7 +38,9 @@ import com.nbscvincent.csc4222024midterm.data.AppViewModelProvider
 import com.nbscvincent.csc4222024midterm.navigation.routes.MainScreen
 import com.nbscvincent.csc4222024midterm.preferences.PreferencesManager
 import com.nbscvincent.csc4222024midterm.viewmodel.LoginScreenViewModel
+import com.nbscvincent.csc4222024midterm.viewmodel.RecipeViewModel
 import com.nbscvincent.csc4222024midterm.viewmodel.ScreenViewModel
+import com.nbscvincent.csc4222024midterm.viewmodel.ToDoViewModel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
@@ -49,15 +51,14 @@ fun Recipes(
     navController: NavController,
     screenViewModel: ScreenViewModel
 ) {
-    val viewModel: LoginScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    val viewModel: RecipeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 
-
-
-
-    val context = LocalContext.current
 
     val coroutineScope = rememberCoroutineScope()
-    var name by remember { mutableStateOf("") }
+
+    val recipesState = viewModel.recipesUiState
+
+    val todo by remember { mutableStateOf("") }
 
 
    
@@ -113,12 +114,25 @@ fun Recipes(
             Button(
                 onClick = {
                     coroutineScope.launch {
-                        name = viewModel.getRecipes()
+                        viewModel.getRecipes()
                     }
                 },
 
                 ) {
-                Text("Get To-Do-List")
+                Text("Get Recipes")
+            }
+
+            val recipeList = recipesState.recipes
+                .split(",")
+                .map { it.replace("[\\[\\]\"{}]".toRegex(), "") } // Remove unwanted characters
+
+            LazyColumn {
+                items(recipeList) { recipes ->
+
+                    Text(recipes, color = Color.Black)
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                }
             }
 
 

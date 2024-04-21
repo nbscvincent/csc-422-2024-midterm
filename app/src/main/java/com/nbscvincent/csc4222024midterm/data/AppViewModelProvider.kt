@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.nbscvincent.csc4222024midterm.viewmodel.LoginScreenViewModel
+import com.nbscvincent.csc4222024midterm.viewmodel.RecipeViewModel
 import com.nbscvincent.csc4222024midterm.viewmodel.ToDoViewModel
 
 
@@ -20,6 +21,10 @@ object AppViewModelProvider {
 
         initializer {
             ToDoViewModel(ktorApplication().container.onlineToDoRepository)
+        }
+
+        initializer {
+            RecipeViewModel(ktorApplication().container.onlineRecipesRepository)
         }
 
 

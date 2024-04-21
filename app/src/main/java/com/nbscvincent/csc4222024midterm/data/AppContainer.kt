@@ -2,6 +2,7 @@ package com.nbscvincent.csc4222024midterm.data
 
 import android.content.Context
 import com.nbscvincent.csc4222024midterm.data.offlineRepository.OfflinePostRepository
+import com.nbscvincent.csc4222024midterm.data.onlineRepository.OnlineRecipesRepository
 
 import com.nbscvincent.csc4222024midterm.data.onlineRepository.OnlineToDoRepository
 
@@ -14,6 +15,7 @@ interface AppContainer {
 
     val onlineUserRepository: OnlineUserRepository
     val onlineToDoRepository: OnlineToDoRepository
+    val onlineRecipesRepository: OnlineRecipesRepository
 
 
     class AppDataContainer(private val context: Context) : AppContainer {
@@ -25,6 +27,11 @@ interface AppContainer {
 
         override val onlineToDoRepository: OnlineToDoRepository by lazy {
             OnlineToDoRepository()
+        }
+
+
+        override val onlineRecipesRepository: OnlineRecipesRepository by lazy {
+            OnlineRecipesRepository()
         }
 
 
