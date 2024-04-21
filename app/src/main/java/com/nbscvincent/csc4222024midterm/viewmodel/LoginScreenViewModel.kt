@@ -41,8 +41,8 @@ import timber.log.Timber
 
 class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepository) : ViewModel() {
 
-    suspend fun checkLogin(username: String, password: String, screenViewModel: ScreenViewModel, navController: NavController) {
-        val loginData = onlineUserRepository.checkLogin(username, password)
+    suspend fun login(username: String, password: String, screenViewModel: ScreenViewModel, navController: NavController) {
+        val loginData = onlineUserRepository.login(username, password)
         if (loginData[0].flag == 1){
             print("INVALID USERNAME AND PASSWORD")
         } else {
@@ -54,7 +54,7 @@ class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepositor
     private val ktorClient: HttpClient = KtorClient()
     suspend fun getQuote() : String {
         var quote: String = ""
-        try {
+
             val req = ktorClient.request(
                 HttpRoutes.quotes
             ){
@@ -64,49 +64,13 @@ class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepositor
                 accept(ContentType.Application.Json)
             }
 
-
             if (req.status.toString() == "200 OK"){
                 val response = req.body<ResponseQoutes>()
                 quote = response.quote
             }
 
-        } catch (e: Exception){
-            println("SAMPLE ERROR $e")
-            //data.add(LoginReturn(1,"Invalid credentials"))
-        }
         return quote
     }
-
-    suspend fun getRecipes() : String {
-        var name: String = ""
-        try {
-            val req = ktorClient.request(
-                HttpRoutes.recipes
-            ){
-                method = HttpMethod.Get
-                url(HttpRoutes.recipes)
-                contentType(ContentType.Application.Json)
-                accept(ContentType.Application.Json)
-            }
-
-            println("SAMPLE" + req.status)
-            println("SAMPLE" + req.bodyAsText())
-
-            if (req.status.toString() == "200 OK"){
-                val response = req.body<Recipes>()
-                name = response.name
-            }
-
-        } catch (e: Exception){
-            println("SAMPLE ERROR $e")
-            //data.add(LoginReturn(1,"Invalid credentials"))
-        }
-        return name
-    }
-
-
-
-
 
 }
 

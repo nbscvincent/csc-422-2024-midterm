@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -86,7 +87,6 @@ fun ToDos(
 
     val todo by remember { mutableStateOf("") }
 
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -98,6 +98,9 @@ fun ToDos(
                     ) {
                         Text("Back")
                     }
+
+
+
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Gray),
                 actions = {
@@ -132,7 +135,10 @@ fun ToDos(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
-            Spacer(modifier = Modifier.height(50.dp))
+            Text("TODO-LIST", color = Color.Black, fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,)
+
+            Spacer(modifier = Modifier.height(20.dp))
 
             Button(
                 onClick = {

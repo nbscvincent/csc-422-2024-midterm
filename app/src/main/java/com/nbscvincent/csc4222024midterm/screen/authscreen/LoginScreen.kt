@@ -107,7 +107,7 @@ fun LoginScreen(
                     Button(
                         onClick = {
                             coroutineScope.launch {
-                                viewModel.checkLogin(username, password, screenViewModel, navController)
+                                viewModel.login(username, password, screenViewModel, navController)
                             }
                         },
                         modifier = Modifier

@@ -24,7 +24,7 @@ import kotlinx.serialization.Serializable
 
 
 class OnlineUserRepository(private val ktorClient: HttpClient = KtorClient()) {
-        suspend fun checkLogin(username: String, password: String): List<LoginResonse> {
+        suspend fun login(username: String, password: String): List<LoginResonse> {
             var data = mutableStateListOf<LoginResonse>()
             try {
                 val req = ktorClient.request(

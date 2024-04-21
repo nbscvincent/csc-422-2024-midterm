@@ -97,13 +97,12 @@ fun HomePage(
 
     var greeting by remember { mutableStateOf("") }
     var qoutes by remember { mutableStateOf("") }
-    var todo by remember { mutableStateOf("") }
+
 
 
     LaunchedEffect(Unit) {
         greeting = greeting()
         qoutes = viewModel.getQuote()
-
     }
 
     Scaffold(
@@ -164,15 +163,6 @@ fun HomePage(
                 fontSize = 15.sp,
                 color = Color.Black,
             )
-
-            Text(
-                        text = todo,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 15.sp,
-                        color = Color.Black,
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-
 
             Button(
                 onClick = {
