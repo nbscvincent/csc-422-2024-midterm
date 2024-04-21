@@ -51,6 +51,10 @@ class AppScreenViewModel() : ViewModel() {
     val todoList: List<TodoList>
         get() = _todoList
 
+    private val _recipesList = mutableStateListOf<RecipesList>()
+    val recipesList: List<RecipesList>
+        get() = _recipesList
+
     suspend fun checkLogin(username:String, password:String) : List<LoginReturn> {
         var data = mutableStateListOf<LoginReturn>()
         try {
@@ -146,10 +150,10 @@ class AppScreenViewModel() : ViewModel() {
         viewModelScope.launch {
             try {
                 val req = ktorClient.request(
-                    HttpRoutes.todos
+                    HttpRoutes.recipes
                 ) {
                     method = HttpMethod.Get
-                    url(HttpRoutes.todos)
+                    url(HttpRoutes.recipes)
                     contentType(ContentType.Application.Json)
                     accept(ContentType.Application.Json)
                 }
@@ -158,9 +162,9 @@ class AppScreenViewModel() : ViewModel() {
                 println("SAMPLE" + req.bodyAsText())
 
                 if (req.status.toString() == "200 OK") {
-                    val response = req.body<TodoResponse>()
-                    _todoList.clear()
-                    _todoList.addAll(response.todos)
+                    val response = req.body<RecipesResponse>()
+                    _recipesList.clear()
+                    _recipesList.addAll(response.recipes)
 
                     println("SAMPLE DISPLAY HERE MODEL" + _todoList)
                 }
@@ -205,6 +209,33 @@ data class TodoList(
 @Serializable
 data class TodoResponse(
     var todos: List<TodoList>,
+    var total: Int,
+    var skip: String,
+    var limit: Int,
+)
+
+@Serializable
+data class RecipesList(
+    var id: Int,
+    var name: String,
+    var ingredients: List<String>,
+    var instructions: List<String>,
+    var prepTimeMinutes: Int,
+    var cookTimeMinutes: Int,
+    var servings: Int,
+    var difficulty: String,
+    var cuisine: String,
+    var caloriesPerServing: Int,
+    var tags: List<String>,
+    var userId: Int,
+    var image: String,
+    var rating: String,
+    var reviewCount: Int,
+    var mealType: List<String>,
+)
+@Serializable
+data class RecipesResponse(
+    var recipes: List<RecipesList>,
     var total: Int,
     var skip: String,
     var limit: Int,

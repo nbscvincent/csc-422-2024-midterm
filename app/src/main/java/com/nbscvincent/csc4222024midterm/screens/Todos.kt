@@ -60,7 +60,6 @@ fun Todos(
     screenViewModel: ScreenViewModel,
 ) {
     val coroutineScope = rememberCoroutineScope()
-
     val homeModel = viewModel<AppScreenViewModel>()
 
     LaunchedEffect(key1 = true) {

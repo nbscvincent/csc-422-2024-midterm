@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -84,6 +85,9 @@ fun Login(
                 shape = RoundedCornerShape(10.dp),
                 onValueChange = { username = it },
                 label = { Text(text = "Username") },
+                textStyle = TextStyle(
+                    color = Color.Black
+                ),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = Color.Black,
                     unfocusedBorderColor = Color.Black,
@@ -103,6 +107,9 @@ fun Login(
                 shape = RoundedCornerShape(10.dp),
                 onValueChange = { password = it },
                 label = { Text(text = "Password") },
+                textStyle = TextStyle(
+                    color = Color.Black
+                ),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = Color.Black,
                     unfocusedBorderColor = Color.Black,
