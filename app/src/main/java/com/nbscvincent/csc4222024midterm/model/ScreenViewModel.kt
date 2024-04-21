@@ -2,7 +2,10 @@ package com.nbscvincent.csc4222024midterm.model
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.nbscvincent.csc4222024midterm.network.HttpRoutes
 import com.nbscvincent.csc4222024midterm.network.KtorClient
 import io.ktor.client.HttpClient
@@ -18,8 +21,10 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import java.util.Calendar
 
@@ -40,6 +45,11 @@ class ScreenViewModel : ViewModel() {
 
 class AppScreenViewModel() : ViewModel() {
     private val ktorClient: HttpClient = KtorClient()
+    var qoute = mutableStateOf("")
+
+    private val _todoList = mutableStateListOf<TodoList>()
+    val todoList: List<TodoList>
+        get() = _todoList
 
     suspend fun checkLogin(username:String, password:String) : List<LoginReturn> {
         var data = mutableStateListOf<LoginReturn>()
@@ -70,7 +80,7 @@ class AppScreenViewModel() : ViewModel() {
         return data
     }
 
-    suspend fun greeting(): String {
+    fun greeting(): String {
         var msg = ""
 
         val calendarTime = Calendar.getInstance()
@@ -85,59 +95,81 @@ class AppScreenViewModel() : ViewModel() {
         return msg
     }
 
-    suspend fun getQoutes() : String {
-        var quote: String = ""
-        try {
-            val req = ktorClient.request(
-                HttpRoutes.quotes
-            ){
-                method = HttpMethod.Get
-                url(HttpRoutes.quotes)
-                contentType(ContentType.Application.Json)
-                accept(ContentType.Application.Json)
+    public fun getQoutes(){
+        viewModelScope.launch {
+            try {
+                val req = ktorClient.request(
+                    HttpRoutes.quotes
+                ) {
+                    method = HttpMethod.Get
+                    url(HttpRoutes.quotes)
+                    contentType(ContentType.Application.Json)
+                    accept(ContentType.Application.Json)
+                }
+                if (req.status.toString() == "200 OK") {
+                    val response = req.body<ResponseQoutes>()
+                    qoute.value = response.quote
+                }
+            } catch (e: Exception) {
             }
-
-            println("SAMPLE" + req.status)
-            println("SAMPLE" + req.bodyAsText())
-
-            if (req.status.toString() == "200 OK"){
-                val response = req.body<ResponseQoutes>()
-                quote = response.quote
-            }
-
-        } catch (e: Exception){
-            println("SAMPLE ERROR $e")
-            //data.add(LoginReturn(1,"Invalid credentials"))
         }
-        return quote
     }
 
-    suspend fun getTodos() : String {
-        var quote: String = ""
-        try {
-            val req = ktorClient.request(
-                HttpRoutes.quotes
-            ){
-                method = HttpMethod.Get
-                url(HttpRoutes.quotes)
-                contentType(ContentType.Application.Json)
-                accept(ContentType.Application.Json)
+    public fun getTodos() {
+        viewModelScope.launch {
+            try {
+                val req = ktorClient.request(
+                    HttpRoutes.todos
+                ) {
+                    method = HttpMethod.Get
+                    url(HttpRoutes.todos)
+                    contentType(ContentType.Application.Json)
+                    accept(ContentType.Application.Json)
+                }
+
+                println("SAMPLE" + req.status)
+                println("SAMPLE" + req.bodyAsText())
+
+                if (req.status.toString() == "200 OK") {
+                    val response = req.body<TodoResponse>()
+                    _todoList.clear()
+                    _todoList.addAll(response.todos)
+
+                    println("SAMPLE DISPLAY HERE MODEL" + _todoList)
+                }
+            } catch (e: Exception) {
+                println("SAMPLE ERROR $e")
             }
-
-            println("SAMPLE" + req.status)
-            println("SAMPLE" + req.bodyAsText())
-
-            if (req.status.toString() == "200 OK"){
-                //val response = req.body<ResponseQoutes>()
-                //quote = response.quote
-            }
-
-        } catch (e: Exception){
-            println("SAMPLE ERROR $e")
-            //data.add(LoginReturn(1,"Invalid credentials"))
         }
-        return quote
     }
+    public fun getRecipes() {
+        viewModelScope.launch {
+            try {
+                val req = ktorClient.request(
+                    HttpRoutes.todos
+                ) {
+                    method = HttpMethod.Get
+                    url(HttpRoutes.todos)
+                    contentType(ContentType.Application.Json)
+                    accept(ContentType.Application.Json)
+                }
+
+                println("SAMPLE" + req.status)
+                println("SAMPLE" + req.bodyAsText())
+
+                if (req.status.toString() == "200 OK") {
+                    val response = req.body<TodoResponse>()
+                    _todoList.clear()
+                    _todoList.addAll(response.todos)
+
+                    println("SAMPLE DISPLAY HERE MODEL" + _todoList)
+                }
+            } catch (e: Exception) {
+                println("SAMPLE ERROR $e")
+            }
+        }
+    }
+
 }
 
 data class LoginReturn(
@@ -162,3 +194,19 @@ data class ResponseQoutes(
     var quote: String,
     var author: String,
 )
+
+@Serializable
+data class TodoList(
+    var id: Int,
+    var todo: String,
+    var completed: Boolean,
+    var userId: Int,
+)
+@Serializable
+data class TodoResponse(
+    var todos: List<TodoList>,
+    var total: Int,
+    var skip: String,
+    var limit: Int,
+)
+

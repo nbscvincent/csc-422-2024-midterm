@@ -90,4 +90,7 @@ dependencies {
 
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("com.google.dagger:dagger-android-support:2.45")
+
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1")
 }
