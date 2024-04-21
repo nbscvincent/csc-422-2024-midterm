@@ -78,10 +78,13 @@ fun ToDos(
 ) {
 
     val viewModel: ToDoViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    val loginScreenViewModel: LoginScreenViewModel = viewModel(factory = AppViewModelProvider.Factory)
 
     val coroutineScope = rememberCoroutineScope()
 
     val todoState = viewModel.todoUiState
+
+    val todo by remember { mutableStateOf("") }
 
 
     Scaffold(
@@ -141,26 +144,25 @@ fun ToDos(
                 ) {
                 Text("Get To-Do-List")
             }
+
+
+            val todoList = todoState.todo
+                .split(",")
+                .map { it.replace("[\\[\\]\"{}]".toRegex(), "") } // Remove unwanted characters
+
             LazyColumn {
-                items(todoState.todo) { todo ->
-                    Card(modifier = Modifier.padding(11.dp)) {
-                        Text(todo.id.toString())
-                        Text(todo.todo)
-                        Text(todo.userID.toString())
-                        Text(todo.completed.toString())
-                    }
+                items(todoList) { todo ->
+
+                        Text(todo, color = Color.Black)
+
                 }
             }
 
 
 
+
+
         }
-
-
-
-
-
-
 
 
     }

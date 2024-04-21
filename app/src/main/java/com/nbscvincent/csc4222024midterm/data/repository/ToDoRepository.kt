@@ -5,6 +5,6 @@ import com.nbscvincent.csc4222024midterm.model.ToDo
 interface ToDoRepository {
 
     // Retrieve all posts
-    suspend fun getToDo(): List<ToDo>
+    suspend fun getToDo(): String
 
 }

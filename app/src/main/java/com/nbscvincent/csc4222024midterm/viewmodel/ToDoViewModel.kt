@@ -33,6 +33,6 @@ class ToDoViewModel(private val toDoRepository: ToDoRepository): ViewModel() {
     }
 
     data class ToDoUiState(
-        var todo: List<ToDo> = emptyList()
+        var todo: String = ""
     )
 }

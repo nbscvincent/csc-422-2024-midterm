@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Entity(tableName = "todo")
 @Serializable
 data class ToDo(
-    @PrimaryKey var id: Int,
+    @PrimaryKey val id: Int,
     val todo: String,
     val completed: Boolean,
     val userID: Int

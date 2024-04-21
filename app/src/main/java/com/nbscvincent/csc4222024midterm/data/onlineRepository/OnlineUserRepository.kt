@@ -52,30 +52,6 @@ class OnlineUserRepository(private val ktorClient: HttpClient = KtorClient()) {
             }
             return data
         }
-    suspend fun getQoutes() : String {
-        var quote: String = ""
-        try {
-            val req = ktorClient.request(
-                HttpRoutes.quotes
-            ){
-                method = HttpMethod.Get
-                url(HttpRoutes.quotes)
-                contentType(ContentType.Application.Json)
-                accept(ContentType.Application.Json)
-            }
-
-
-            if (req.status.toString() == "200 OK"){
-                val response = req.body<ResponseQoutes>()
-                quote = response.quote
-            }
-
-        } catch (e: Exception){
-            println("SAMPLE ERROR $e")
-            //data.add(LoginReturn(1,"Invalid credentials"))
-        }
-        return quote
-    }
 }
 
 

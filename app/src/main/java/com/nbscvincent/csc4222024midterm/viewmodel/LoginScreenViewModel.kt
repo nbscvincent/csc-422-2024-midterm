@@ -18,6 +18,7 @@ import com.nbscvincent.csc4222024midterm.data.network.KtorClient
 import com.nbscvincent.csc4222024midterm.data.onlineRepository.OnlineUserRepository
 import com.nbscvincent.csc4222024midterm.model.Credentials
 import com.nbscvincent.csc4222024midterm.model.LoginResponse
+import com.nbscvincent.csc4222024midterm.model.Recipes
 import com.nbscvincent.csc4222024midterm.model.ResponseQoutes
 import com.nbscvincent.csc4222024midterm.model.ToDo
 import com.nbscvincent.csc4222024midterm.navigation.routes.MainScreen
@@ -29,6 +30,7 @@ import io.ktor.client.request.forms.formData
 import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
+import io.ktor.client.statement.bodyAsText
 import io.ktor.client.utils.EmptyContent.contentType
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
@@ -74,6 +76,35 @@ class LoginScreenViewModel(private val onlineUserRepository: OnlineUserRepositor
         }
         return quote
     }
+
+    suspend fun getRecipes() : String {
+        var name: String = ""
+        try {
+            val req = ktorClient.request(
+                HttpRoutes.recipes
+            ){
+                method = HttpMethod.Get
+                url(HttpRoutes.recipes)
+                contentType(ContentType.Application.Json)
+                accept(ContentType.Application.Json)
+            }
+
+            println("SAMPLE" + req.status)
+            println("SAMPLE" + req.bodyAsText())
+
+            if (req.status.toString() == "200 OK"){
+                val response = req.body<Recipes>()
+                name = response.name
+            }
+
+        } catch (e: Exception){
+            println("SAMPLE ERROR $e")
+            //data.add(LoginReturn(1,"Invalid credentials"))
+        }
+        return name
+    }
+
+
 
 
 

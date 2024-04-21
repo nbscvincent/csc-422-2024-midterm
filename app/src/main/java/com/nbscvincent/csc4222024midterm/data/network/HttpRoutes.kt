@@ -6,8 +6,8 @@ object HttpRoutes {
     const val quotes: String = "$BASEURL/quotes/random"
 
     const val recipes: String = "$BASEURL/recipes"
+    const val todos: String = "$BASEURL/todos"
 
-
-    private const val TODO: String = "https://dummyjson.com"
-    const val todos: String = "$TODO/todos"
+    private const val URL = "https://jsonplaceholder.typicode.com"
+    const val TODO = "$URL/todos"
 }

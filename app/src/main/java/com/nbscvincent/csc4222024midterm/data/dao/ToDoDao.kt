@@ -11,7 +11,7 @@ import com.nbscvincent.csc4222024midterm.model.ToDo
 @Dao
 interface ToDoDao {
     @Query("SELECT * from todo ORDER BY id ASC")
-    fun getAllToDo(): List<ToDo>
+    fun getAllToDo(): String
 
 
 }
