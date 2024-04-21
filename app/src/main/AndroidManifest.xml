@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".KtorApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,7 +14,7 @@
         android:theme="@style/Theme.CSC4222024Midterm"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="com.bonaagua.midterm.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.CSC4222024Midterm">

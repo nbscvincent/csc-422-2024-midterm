@@ -1,4 +1,4 @@
-package com.nbscvincent.csc4222024midterm.ui.theme
+package com.bonaagua.midterm.theme
 
 import android.app.Activity
 import android.os.Build
@@ -38,7 +38,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun CSC4222024MidtermTheme(
+fun KtorAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,

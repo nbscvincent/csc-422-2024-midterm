@@ -1,4 +1,4 @@
-package com.nbscvincent.csc4222024midterm.ui.theme
+package com.bonaagua.midterm.theme
 
 import androidx.compose.ui.graphics.Color
 
