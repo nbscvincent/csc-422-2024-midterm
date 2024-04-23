@@ -3,6 +3,7 @@ package com.nbscvincent.csc4222024midterm.data.users.model
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import io.ktor.http.ContentType.Application.Json
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 

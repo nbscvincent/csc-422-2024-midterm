@@ -6,7 +6,9 @@ import com.nbscvincent.csc4222024midterm.network.HttpRoutes
 import com.nbscvincent.csc4222024midterm.network.KtorClient
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.accept
 import io.ktor.client.request.request
+import io.ktor.client.request.url
 import io.ktor.client.utils.EmptyContent.contentType
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
