@@ -1,4 +1,11 @@
 package com.nbscvincent.csc4222024midterm.data.recipes.model
 
-class RecipeResponse {
-}
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class RecipeResponse(
+    val recipes: List<Recipe>,
+    val total: Int,
+    val skip: Int,
+    val limit: Int
+)
