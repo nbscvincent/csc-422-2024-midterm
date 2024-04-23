@@ -1,4 +1,9 @@
 package com.nbscvincent.csc4222024midterm.data.users.model
 
-class UserCredentials {
-}
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class UserCredentials(
+    val username: String,
+    val password: String
+)
